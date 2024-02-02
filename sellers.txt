@@ -1,0 +1,3 @@
+Store1;S1;111@seller.com;111
+Store2;S2;222@seller.com;222
+Store3;S3;333@seller.com;333

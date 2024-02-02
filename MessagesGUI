@@ -1,0 +1,287 @@
+import javax.swing.*;
+import java.util.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+/**
+ * CS180 Project 5
+ *
+ * This program holds the Messages Class for Project 5
+ *
+ * @author Nithish Thatchinamoorthy, Xinyan Tang, Brittany Geer, Kinjal Goel, Hari Meka
+ * @version April 10 2023
+ *
+ */
+
+public class MessagesGUI {
+    private Customers customer;
+    private Sellers seller;
+    private static final String WELCOME = "Welcome to the marketplace!";
+    private static final String customerOrSellerQuestion = "Are you a customer or seller?";
+    private static final String customerOrSeller = "1.Customer\n2.Seller";
+    private static final String loginOrSignupQuestion = "Would you like to login or signup with a new account";
+    private static final String loginOrSignup = "1.Login\n2.Signup";
+    private static final String filePathForSellers = "sellers.txt";
+    private static final String filePathForCustomers = "customers.txt";
+    private static final String filePathForMessages = "messages.txt";
+    private static final String filePathForBlockList = "block_list.txt";
+    private static final String filePathForInvisibleList = "invisible_list.txt";
+    //int cos;
+
+    public static void main(String[] args) {
+        showStatsDialog();
+    }
+
+    public static void showCosOrSelDialog() {
+        JFrame frame = new JFrame("Project 5");
+        Container content = frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        JPanel upperPanel = new JPanel();
+
+        JLabel title = new JLabel(customerOrSellerQuestion);
+        upperPanel.add(title);
+        content.add(upperPanel, BorderLayout.NORTH);
+
+
+        JButton customer = new JButton();
+        customer.setText("Customer");
+        JButton seller = new JButton();
+        seller.setText("Seller");
+        bottomPanel.add(customer);
+        bottomPanel.add(seller);
+        content.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        customer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                showLoginDialog();
+                //showCustomerDialog();
+                //do customer stuff
+                frame.dispose();
+            }
+        });
+        seller.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                showLoginDialog();
+                //showSellerDialog();
+                //do selelr stuff
+                frame.dispose();
+            }
+        });
+
+    }
+    public static void showLoginDialog() {
+        JFrame frame = new JFrame("Project 5");
+        Container content = frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        JPanel upperPanel = new JPanel();
+
+        JLabel title = new JLabel(loginOrSignupQuestion);
+        upperPanel.add(title);
+        content.add(upperPanel, BorderLayout.NORTH);
+
+
+        JButton login = new JButton();
+        login.setText("Login");
+        JButton signup = new JButton();
+        signup.setText("Sign-Up");
+        bottomPanel.add(login);
+        bottomPanel.add(signup);
+        content.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        login.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                showCustomerDialog();
+                frame.dispose();
+            }
+        });
+        signup.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                showSellerDialog();
+                frame.dispose();
+            }
+        });
+    }
+
+    public static void showCustomerDialog() {
+        //JOptionPane.showMessageDialog(null, "Customer works", "Project 5", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public static void showSellerDialog() {
+        //JOptionPane.showMessageDialog(null, "Seller works", "Project 5", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /*
+    public static void showDashboardDialog(String[] customers, String sName) {
+        JFrame frame = new JFrame("Project 5");
+        Container content = frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        JPanel upperPanel = new JPanel();
+
+        JComboBox<String> jComboBox = new JComboBox<>(customers);
+        upperPanel.add(jComboBox);
+        content.add(upperPanel, BorderLayout.NORTH);
+
+        JButton select = new JButton("Select Option");
+        bottomPanel.add(select);
+        content.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+
+        select.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //frame.setVisible(false);
+                String selection = "You selected " + jComboBox.getItemAt(jComboBox.getSelectedIndex());
+                //String result = CommonWord(selection, sName, customers);
+                JOptionPane.showMessageDialog(null, result, "Search Results", JOptionPane.INFORMATION_MESSAGE);
+                //frame.dispose();
+            }
+        });
+    }
+
+     */
+
+
+    // This method below was from the sellers class. Dashboard method and functionality has been oriented around the sellers class
+
+   public void showStatsDialog(String sName, ArrayList<String> customers) {
+        ArrayList<String> messageHistory = new ArrayList<>();
+        String word;
+        JFrame frame = new JFrame("Project 5");
+        Container content = frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        JPanel upperPanel = new JPanel();
+
+        JLabel stats = new JLabel("Customer Statistics");
+        upperPanel.add(stats);
+        content.add(upperPanel, BorderLayout.NORTH);
+
+        JTextArea customerList = new JTextArea(10,45);
+        JScrollPane scrollPane = new JScrollPane(customerList);
+        customerList.setEditable(false);
+
+        word = CommonWord(sName, customers);
+        customerList.append(word + "\n");
+
+        for (int i = 0; i < customers.size(); i++) {
+            messageHistory = getMessages(sName, customers.get(i));
+            customerList.append(messageHistory.size() + " messages sent with " + customers.get(i) + ".\n");
+        }
+        bottomPanel.add(scrollPane);
+        content.add(bottomPanel, BorderLayout.CENTER);
+
+
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+    public String CommonWord(String cName, ArrayList<String> customers) {
+        ArrayList<String> messageHistory;
+        ArrayList<String> wordList = new ArrayList<>();
+
+        for (int i = 0; i < customers.size(); i++) {
+            messageHistory = getMessages(cName, customers.get(i));
+            for (int k = 0; k < messageHistory.size(); k++) {
+                String[] messageWords = messageHistory.get(i).split(" ");
+                for (int j = 0; j < messageWords.length; j++) {
+                    wordList.add(messageWords[j]);
+                }
+            }
+        }
+
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String element : wordList) {
+            if (map.containsKey(element)) {
+                map.put(element, map.get(element) + 1);
+            } else {
+                map.put(element, 1);
+            }
+        }
+
+        // find the most common element
+        int maxCount = 0;
+        String mostCommon = "";
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostCommon = entry.getKey();
+            }
+        }
+        return "The overall most common word is \"" + mostCommon + "\".";
+    }
+
+
+    public static void showMessageDialog(String sName, String cName) {
+        ArrayList<String> anomalies = getMessages(sName, cName);
+        JFrame frame = new JFrame("Project 5");
+        Container content = frame.getContentPane();
+        content.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        JPanel upperPanel = new JPanel();
+
+        JLabel label = new JLabel("Chat between " + sName + " and " + cName);
+        upperPanel.add(label);
+
+        content.add(upperPanel, BorderLayout.NORTH);
+
+
+        JTextArea chatHistory = new JTextArea(7,25);
+        JScrollPane scrollPane = new JScrollPane(chatHistory);
+        chatHistory.setEditable(false);
+        for(String a : anomalies){
+            chatHistory.append(a + "\n");
+        }
+        bottomPanel.add(scrollPane);
+        content.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public ArrayList getMessages(String cName, String sName) {
+        ArrayList<String> messages = new ArrayList<>();
+        try {
+            FileReader fr = new FileReader(this.filePathForMessages);
+            BufferedReader bffr = new BufferedReader(fr);
+            String currentLine;
+            while ((currentLine = bffr.readLine()) != null) {
+                if (currentLine.split(";")[0].equalsIgnoreCase(cName) || currentLine.split(";")[0].equalsIgnoreCase(sName)) {
+                    messages.add(currentLine);
+                }
+            }
+            bffr.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+
+
+}

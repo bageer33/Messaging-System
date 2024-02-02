@@ -1,0 +1,7 @@
+S1;C1;2023-04-07 15:35:27;Do you want to buy this book?
+C1;S1;2023-04-07 15:37:32;Yes. How much dose it cost?
+S1;C1;2023-04-07 15:42:41;256$
+C1;S1;2023-04-07 15:47:23;Yes. I will pay you latter.
+C2;S2;2023-04-07 15:48:32;How much?
+S2;C2;2023-04-07 15:51:41;512$
+C2;S2;2023-04-07 15:53:23;OK.
